@@ -27,27 +27,26 @@ class RandomString:
         iregex_parse = parse(iregex)
         iregex_parse.dump()
         
-    def __opcode_in__(self, npat, nlist):
+    def __opcode_in__(self, npattern, nlist):
         """
         Generate string recursively
-        npat: is a pattern list containing tuples in the form => (opcode, literal_value_or_range)
+        npatttern: is a pattern list containing tuples in the form => (opcode, literal_value_or_range)
         nlist: list returned with allowed characters
         """
         negate = False
         negate_list = []
-        #tp stands for tuple
-        for tp in npat:
-            logger.debug(tp)
-            op = str(tp[0])
-            if op.lower() == 'literal':
+        for atuple in npattern:
+            logger.debug(atuple)
+            opcode = str(atuple[0]).lower()
+            if opcode == 'literal':
                 if negate:
-                    negate_list.append(tp[1])
+                    negate_list.append(atuple[1])
                 else:
-                    nlist.append(tp[1])
-            elif op.lower() == 'negate':
+                    nlist.append(atuple[1])
+            elif opcode == 'negate':
                 negate = True
-            elif op.lower() == 'category':
-                category = str(tp[1]).lower()
+            elif opcode == 'category':
+                category = str(atuple[1]).lower()
                 string_list = None
                 if category == 'category_digit':
                     string_list = string.digits
@@ -64,52 +63,52 @@ class RandomString:
                         negate_list.append(ord(i))
                     else:
                         nlist.append(ord(i))
-            elif op.lower() == 'in':
-                logger.debug('in {}'.format(tp[1]))
-                tlist = self.__opcode_in__(tp[1], [])
+            elif opcode == 'in':
+                logger.debug('in {}'.format(atuple[1]))
+                tlist = self.__opcode_in__(atuple[1], [])
                 nlist.append(random.choice(tlist))
                 logger.debug(nlist)
-            elif op.lower() == 'not_literal':
+            elif opcode == 'not_literal':
                 tval = random.choice(self.letters_code)
-                logger.debug('{} {}'.format(tval, tp[1]))
-                while tval == tp[1]:
+                logger.debug('{} {}'.format(tval, atuple[1]))
+                while tval == atuple[1]:
                     logger.debug('random value not allowed: trying again')
                     tval = random.choice(self.letters_code)
                 nlist.append(tval)
-            elif op.lower() == 'any':
+            elif opcode == 'any':
                 nlist.append(random.choice(self.letters_code))
-            elif op.lower() == 'range':
-                low, high = tp[1]
+            elif opcode == 'range':
+                low, high = atuple[1]
                 for i in range(low, high+1):
                     if negate:
                         negate_list.append(i)
                     else:
                         nlist.append(i)
-            elif op.lower() == 'subpattern':
-                logger.debug('subpattern: {}'.format(tp))
-                tlist = self.__opcode_in__(tp[1][3], [])
+            elif opcode == 'subpattern':
+                logger.debug('subpattern: {}'.format(atuple))
+                tlist = self.__opcode_in__(atuple[1][3], [])
                 logger.debug(tlist)
                 for i in tlist:
                     nlist.append(i)
-            elif op.lower() == 'branch':
+            elif opcode == 'branch':
                 sample_list = []
-                if isinstance(tp[1], list):
-                    slist = tp[1]
-                elif isinstance(tp[1], tuple):
-                    slist = tp[1][1]
+                if isinstance(atuple[1], list):
+                    slist = atuple[1]
+                elif isinstance(atuple[1], tuple):
+                    slist = atuple[1][1]
                 for sublist in slist:
                     tlist = self.__opcode_in__(sublist, [])
                     sample_list.append(tlist.copy())
                 sample = random.choice(sample_list)
                 for i in sample:
                     nlist.append(i)
-            elif op.lower() in ['max_repeat', 'min_repeat']:
-                if str(tp[1][1]).lower() == 'maxrepeat':
+            elif opcode in ['max_repeat', 'min_repeat']:
+                if str(atuple[1][1]).lower() == 'maxrepeat':
                     max_repeat = self.max_repeat
                 else:
-                    max_repeat = tp[1][1]
-                rval = random.randint(tp[1][0], max_repeat)
-                pat = tp[1][2]
+                    max_repeat = atuple[1][1]
+                rval = random.randint(atuple[1][0], max_repeat)
+                pat = atuple[1][2]
                 logger.debug('repeating sequence {} times'.format(rval))
                 if isinstance(pat.data[0], tuple):
                     subop = str(pat.data[0][0])
