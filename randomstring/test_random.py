@@ -9,7 +9,7 @@ class TestRandom(unittest.TestCase):
     def test_simple_string(self):
         iregex = '[-+]?[0-9]{1,16}[.][0-9]{1,6}?'
         final = self.rstring.generate_random_string(iregex)
-        print('\nrandom string = {}'.format(final))
+        print('\nrandom simple string = {}'.format(final))
         self.assertTrue(re.match(iregex, final))
     
     def test_random_string(self):
@@ -21,7 +21,13 @@ class TestRandom(unittest.TestCase):
     def test_complex_string(self):
         iregex = '(1[0-2]|0[1-9])(:[0-5][0-9]){2}(A|P)M'
         final = self.rstring.generate_random_string(iregex)
-        print('\nrandom string = {}'.format(final))
+        print('\nrandom complex string = {}'.format(final))
+        self.assertTrue(re.match(iregex, final))
+    
+    def test_random_category_string(self):
+        iregex = '(1[0-2]|0[1-9])(:[0-5][^\d]{4}\d[\W]+){2}(A|P)M'
+        final = self.rstring.generate_random_string(iregex)
+        print('\nrandom category string = {}'.format(final))
         self.assertTrue(re.match(iregex, final))
         
     
