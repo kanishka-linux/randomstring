@@ -46,6 +46,24 @@ class RandomString:
                     nlist.append(tp[1])
             elif op.lower() == 'negate':
                 negate = True
+            elif op.lower() == 'category':
+                category = str(tp[1]).lower()
+                string_list = None
+                if category == 'category_digit':
+                    string_list = string.digits
+                elif category == 'category_word':
+                    string_list = string.ascii_letters + string.digits + '_'
+                elif category == 'category_not_word':
+                    string_list = string.punctuation.replace('_', '')
+                elif category == 'category_space':
+                    string_list = string.whitespace
+                else:
+                    logger.error('category: {} not handled'.format(category))
+                for i in string_list:
+                    if negate:
+                        negate_list.append(ord(i))
+                    else:
+                        nlist.append(ord(i))
             elif op.lower() == 'in':
                 logger.debug('in {}'.format(tp[1]))
                 tlist = self.__opcode_in__(tp[1], [])
