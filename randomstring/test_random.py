@@ -29,6 +29,12 @@ class TestRandom(unittest.TestCase):
         final = self.rstring.generate_random_string(iregex)
         print('\nrandom category string = {}'.format(final))
         self.assertTrue(re.match(iregex, final))
+    
+    def test_manual_parsing(self):
+        iregex = '[-+]?[0-9]{1,16}[.][0-9]{1,6}?'
+        final = self.rstring.generate_random_string(iregex, manual=True)
+        print('\nrandom manually parsed string = {}'.format(final))
+        self.assertTrue(re.match(iregex, final))
         
     
 if __name__ == '__main__':
