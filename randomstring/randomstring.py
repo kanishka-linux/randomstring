@@ -196,7 +196,7 @@ class RandomString:
                     opcode = 'MIN_REPEAT'
                     last = parsed_list.pop()
                     alist = list(last)
-                    alist[0] = 'MIN_REPEAT'
+                    alist[0] = opcode
                     atuple = tuple(alist)
                 else:
                     opcode = 'MAX_REPEAT'
@@ -211,6 +211,12 @@ class RandomString:
         return parsed_list
     
     def solve_brackets(self, start, regex):
+        """
+        Manually parse expression inside bracket. 
+        
+        Return last character index of 
+        bracket expression along with generated tuple.
+        """
         val = []
         i = start + 1
         start_string = i
