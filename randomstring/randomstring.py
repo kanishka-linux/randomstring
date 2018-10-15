@@ -22,7 +22,7 @@ class RandomString:
         
     def dump(self, iregex):
         """
-        dump parsed regex output on terminal,
+        Dump parsed regex output on the terminal,
         displaying various opcodes and corresponding
         values
         """
@@ -31,8 +31,10 @@ class RandomString:
         
     def __opcode_in__(self, npattern, nlist, manual=False):
         """
-        Generate string recursively
-        npatttern: is a pattern list containing tuples in the form => (opcode, literal_value_or_range)
+        Generate string recursively.
+        
+        npatttern: is a pattern list containing tuples
+        in the form => (opcode, literal_value_or_range)
         nlist: list returned with allowed characters
         """
         negate = False
@@ -162,7 +164,7 @@ class RandomString:
         for op, args in iregex_parse_data:
             ascii_list = ascii_list + self.__opcode_in__([(op, args)], [], manual=manual)
         logger.debug(ascii_list)
-        final = [str(chr(i)) for i in ascii_list] #convert ascii integers to corresponding characters
+        final = [str(chr(i)) for i in ascii_list] #Convert ascii integers to corresponding characters
         final_string = ''.join(final)
         return final_string
     
@@ -214,8 +216,8 @@ class RandomString:
         """
         Manually parse expression inside bracket. 
         
-        Return last character index of 
-        bracket expression along with generated tuple.
+        Return last character index of bracket
+        expression along with generated tuple.
         """
         val = []
         i = start + 1
